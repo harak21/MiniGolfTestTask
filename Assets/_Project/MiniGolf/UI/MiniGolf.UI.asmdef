@@ -1,0 +1,19 @@
+{
+    "name": "MiniGolf.UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:5eacd3b36ee58c144abf5edce62298d8",
+        "GUID:b2c22bc4190043b4dbabb9eff4be7e82",
+        "GUID:297614d8a9f030442a206403a3cab5c0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

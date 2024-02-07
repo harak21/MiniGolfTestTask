@@ -1,0 +1,14 @@
+{
+    "name": "MiniGolf.PlayerData",
+    "rootNamespace": "",
+    "references": ["GUID:5eacd3b36ee58c144abf5edce62298d8","GUID:0058d0751b2a9b043aa01239e7cf1078"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

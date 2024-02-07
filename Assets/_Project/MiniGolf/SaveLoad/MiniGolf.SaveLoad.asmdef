@@ -1,0 +1,16 @@
+{
+    "name": "MiniGolf.SaveLoad",
+    "rootNamespace": "",
+    "references": ["GUID:5eacd3b36ee58c144abf5edce62298d8"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

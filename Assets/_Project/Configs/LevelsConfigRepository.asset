@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c10b7818414f40fbbfb7f831f16b0632, type: 3}
+  m_Name: LevelsConfigRepository
+  m_EditorClassIdentifier: 
+  levelsConfig:
+  - levelName: Level 1
+    addressableName: 1.First
+    startPoint: {x: -2.87, y: 0.839, z: -2.66}
+    levelGoals:
+      threeStars: 0
+      twoStars: 0
+      oneStar: 0
+  - levelName: Level 2
+    addressableName: 2.Second
+    startPoint: {x: 0, y: 0, z: 0}
+    levelGoals:
+      threeStars: 0
+      twoStars: 0
+      oneStar: 0
+  - levelName: Level 3
+    addressableName: 3.Third
+    startPoint: {x: 0, y: 0, z: 0}
+    levelGoals:
+      threeStars: 0
+      twoStars: 0
+      oneStar: 0

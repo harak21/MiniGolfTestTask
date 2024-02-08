@@ -27,9 +27,8 @@ namespace MiniGolf.Bootstrap
             builder.Register<ILoadingService, LoadingService>(Lifetime.Singleton);
             builder.Register<ConfigContainer>(Lifetime.Singleton);
             builder.Register<ISceneLoadService, SceneLoadService>(Lifetime.Singleton);
-            builder.Register<MainMenuController>(Lifetime.Scoped);
+            builder.Register<MainMenuUiController>(Lifetime.Scoped);
             builder.Register<PlayerDataContainer>(Lifetime.Singleton);
-            builder.Register<GameManager>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<BootstrapFlow>();
         }

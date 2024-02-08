@@ -17,18 +17,26 @@ MonoBehaviour:
     addressableName: 1.First
     startPoint: {x: -2.87, y: 0.839, z: -2.66}
     levelGoals:
-      threeStars: 0
-      twoStars: 0
-      oneStar: 0
+      threeStars: 2
+      twoStars: 5
+      oneStar: 8
   - levelName: Level 2
     addressableName: 2.Second
     startPoint: {x: 0, y: 0, z: 0}
     levelGoals:
-      threeStars: 0
-      twoStars: 0
-      oneStar: 0
+      threeStars: 2
+      twoStars: 5
+      oneStar: 8
   - levelName: Level 3
     addressableName: 3.Third
+    startPoint: {x: 0, y: 0, z: 0}
+    levelGoals:
+      threeStars: 2
+      twoStars: 5
+      oneStar: 8
+  mainMenu:
+    levelName: Main
+    addressableName: 00.GameMenu
     startPoint: {x: 0, y: 0, z: 0}
     levelGoals:
       threeStars: 0

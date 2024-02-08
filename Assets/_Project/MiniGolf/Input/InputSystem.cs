@@ -8,12 +8,12 @@ namespace MiniGolf.Input
     [UsedImplicitly]
     public class InputSystem : IInputSystem
     {
-        private readonly PlayerInput _playerInput;
-        private readonly InputAction _pointerAction;
-
         public event Action<Vector2> OnClickStarted;
         public event Action OnClickPerformed;
         public event Action OnPausePressed;
+        
+        private readonly PlayerInput _playerInput;
+        private readonly InputAction _pointerAction;
 
         public Vector2 PointerPosition => _pointerAction.ReadValue<Vector2>();
         

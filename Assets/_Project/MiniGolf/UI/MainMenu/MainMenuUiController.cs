@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 namespace MiniGolf.UI.MainMenu
 {
     [UsedImplicitly]
-    public class MainMenuController : ILoadUnit
+    public class MainMenuUiController : ILoadUnit
     {
         public event Action<LevelConfig> OnLevelSelected;
         
@@ -24,7 +24,7 @@ namespace MiniGolf.UI.MainMenu
         private LevelView _levelViewPrefab;
 
 
-        public MainMenuController(ConfigContainer configContainer, 
+        public MainMenuUiController(ConfigContainer configContainer, 
             PlayerDataContainer playerDataContainerContainer)
         {
             _configContainer = configContainer;
@@ -53,18 +53,12 @@ namespace MiniGolf.UI.MainMenu
                 
                 if (i != 0)
                 {
-                    isAvailable = levelsStars.Count > i && levelsStars[i - 1] >= 2;
+                    isAvailable = levelsStars.Count >= i && levelsStars[i - 1] >= 2;
                 }
                 starCount = levelsStars.Count > i ? levelsStars[i] : 0;
                 
                 ConstructLevelView(levelsConfig[i].LevelName, i, isAvailable, starCount);
             }
-
-            if (levelsStars.Count < levelsConfig.Count)
-            {
-                _views[levelsStars.Count].SetAvailable();
-            }
-            
         }
 
         public void Show()

@@ -28,5 +28,11 @@ namespace MiniGolf.PlayerData
                 await _saveLoadService.LoadAsync<PlayerRuntimeData>(RuntimeConstants.PlayerData.PlayerRuntimeData)
                 ?? new PlayerRuntimeData();
         }
+
+        public void Save()
+        {
+            _saveLoadService.Save(RuntimeConstants.PlayerData.PlayerProgress, PlayerProgress);
+            _saveLoadService.Save(RuntimeConstants.PlayerData.PlayerRuntimeData, PlayerRuntimeData);
+        }
     }
 }

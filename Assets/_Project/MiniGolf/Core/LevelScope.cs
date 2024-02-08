@@ -17,8 +17,10 @@ namespace MiniGolf.Core
             builder.Register<IPlayerSpawner, PlayerSpawner>(Lifetime.Scoped);
             builder.Register<LevelUiController>(Lifetime.Scoped);
             builder.Register<LevelManager>(Lifetime.Scoped);
+            builder.Register<PlayerCharacterController>(Lifetime.Scoped);
+            builder.Register<PlayerArrow>(Lifetime.Scoped);
 
-            builder.RegisterEntryPoint<LevelFlow>();
+            builder.RegisterEntryPoint<LevelFlow>(Lifetime.Scoped);
         }
     }
 }

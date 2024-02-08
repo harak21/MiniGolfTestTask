@@ -16,9 +16,11 @@ namespace MiniGolf.UI.LevelHUD
         public event Action OnContinuePressed;
         public event Action OnRestartPressed;
         public event Action OnExitPressed;
+        public event Action OnNextPressed;
         
         private HudView _hudView;
         private PauseView _pauseView;
+        private EndLevelView _endLevelView;
         
         public async Task Load()
         {
@@ -26,6 +28,24 @@ namespace MiniGolf.UI.LevelHUD
             _hudView = Object.Instantiate(hudAsset).GetComponent<HudView>();
             var pauseAsset = await AssetService.R.Load<GameObject>(RuntimeConstants.Addressables.PauseMenu);
             _pauseView = Object.Instantiate(pauseAsset).GetComponent<PauseView>();
+            var endLevelAsset = await AssetService.R.Load<GameObject>(RuntimeConstants.Addressables.EndLevelView);
+            _endLevelView = Object.Instantiate(endLevelAsset).GetComponent<EndLevelView>();
+        }
+
+        public void Construct()
+        {
+            _hudView.OnPausePressed += Pause;
+            _pauseView.OnContinuePressed += Continue;
+            _pauseView.OnExitPressed += Exit;
+            _pauseView.OnRestartPressed += Restart;
+            _endLevelView.OnExitPressed += Exit;
+            _endLevelView.OnRestartPressed += Restart;
+            _endLevelView.OnNextPressed += Next;
+        }
+        
+        public void ShowEndView(int starCount)
+        {
+            _endLevelView.Show(starCount);
         }
 
         public void SetHitCount(int count)
@@ -38,17 +58,15 @@ namespace MiniGolf.UI.LevelHUD
             _pauseView.Show();
         }
 
-        public void HidePauseView()
+        public void Hide()
         {
             _pauseView.Hide();
+            _endLevelView.Hide();
         }
 
-        public void Construct()
+        private void Next()
         {
-            _hudView.OnPausePressed += Pause;
-            _pauseView.OnContinuePressed += Continue;
-            _pauseView.OnExitPressed += Exit;
-            _pauseView.OnRestartPressed += Restart;
+            OnNextPressed?.Invoke();
         }
 
         private void Restart()

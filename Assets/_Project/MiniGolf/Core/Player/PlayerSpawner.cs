@@ -28,5 +28,14 @@ namespace MiniGolf.Core.Player
         {
             return Object.Instantiate(_playerPrefab, _levelConfig.StartPoint, Quaternion.identity);
         }
+
+        /// <summary>
+        /// you can make a pool here if you need to.
+        /// </summary>
+        /// <param name="gameObject"></param>
+        public void Release(GameObject gameObject)
+        {
+            Object.Destroy(gameObject);
+        }
     }
 }

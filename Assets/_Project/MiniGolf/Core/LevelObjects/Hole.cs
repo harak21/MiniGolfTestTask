@@ -7,13 +7,6 @@ namespace MiniGolf.Core.LevelObjects
     internal class Hole : MonoBehaviour
     {
         public event Action OnLevelFinish;
-        
-        [SerializeField] private Collider col;
-
-        private void Reset()
-        {
-            col = GetComponent<Collider>();
-        }
 
         private void OnTriggerEnter(Collider other)
         {

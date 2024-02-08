@@ -31,7 +31,7 @@ namespace MiniGolf.Input
             ""actions"": [
                 {
                     ""name"": ""Exit"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Button"",
                     ""id"": ""830bb7d5-e84d-405c-b5da-43b59ed1c6e9"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -93,7 +93,7 @@ namespace MiniGolf.Input
                     ""name"": """",
                     ""id"": ""d8a4f76c-f93d-4a5e-bbe8-b520d37fb6da"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=1)"",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Click"",

@@ -5,6 +5,7 @@ using MiniGolf.Input;
 using MiniGolf.PlayerData;
 using MiniGolf.SceneManagement;
 using MiniGolf.UI.LevelHUD;
+using MiniGolf.Utility.Config;
 using UnityEngine;
 
 namespace MiniGolf.Core
@@ -15,33 +16,35 @@ namespace MiniGolf.Core
         private readonly LevelData _levelData;
         private readonly PlayerDataContainer _playerDataContainer;
         private readonly IInputSystem _inputSystem;
-        private readonly IPlayerSpawner _playerSpawner;
         private readonly LevelUiController _levelUiController;
         private readonly ISceneLoadService _sceneLoadService;
+        private readonly PlayerCharacterController _characterController;
+        private readonly ConfigContainer _configContainer;
 
-        private GameObject _player;
-        private Vector2 _lastClickPosition;
+        private Vector2? _lastClickPosition;
 
-        private bool _isPaused;
+        private bool _isPaused = true;
+        private int _hitCount;
 
         public LevelManager(LevelData levelData, 
             PlayerDataContainer playerDataContainer, 
             IInputSystem inputSystem,
-            IPlayerSpawner playerSpawner,
             LevelUiController levelUiController,
-            ISceneLoadService sceneLoadService)
+            ISceneLoadService sceneLoadService,
+            PlayerCharacterController characterController,
+            ConfigContainer configContainer)
         {
             _levelData = levelData;
             _playerDataContainer = playerDataContainer;
             _inputSystem = inputSystem;
-            _playerSpawner = playerSpawner;
             _levelUiController = levelUiController;
             _sceneLoadService = sceneLoadService;
+            _characterController = characterController;
+            _configContainer = configContainer;
         }
 
         public void Start()
         {
-            _player = _playerSpawner.Spawn();
             _inputSystem.OnClickStarted += PlayerClickStarted;
             _inputSystem.OnClickPerformed += PlayerClickPerformed;
             _inputSystem.OnPausePressed += InputPausePressed;
@@ -51,16 +54,102 @@ namespace MiniGolf.Core
             _levelUiController.OnContinuePressed += UiContinuePressed;
             _levelUiController.OnExitPressed += Exit;
             _levelUiController.OnRestartPressed += Restart;
+            _levelUiController.OnNextPressed += NextLevel;
+
+            _levelData.Hole.OnLevelFinish += FinishLevel;
+
+            foreach (var booster in _levelData.Boosters)
+            {
+                booster.OnBallBust += BoostPlayer;
+            }
+
+            _isPaused = false;
+        }
+        
+        public void Dispose()
+        {
+            _inputSystem.OnClickStarted -= PlayerClickStarted;
+            _inputSystem.OnClickPerformed -= PlayerClickPerformed;
+            _inputSystem.OnPausePressed -= InputPausePressed;
+            _levelUiController.OnPausePressed -= UiPausePressed;
+            _levelUiController.OnContinuePressed -= UiContinuePressed;
+            _levelUiController.OnExitPressed -= Exit;
+            _levelUiController.OnRestartPressed -= Restart;
+            _levelUiController.OnNextPressed -= NextLevel;
+
+            _levelData.Hole.OnLevelFinish -= FinishLevel;
+            
+            foreach (var booster in _levelData.Boosters)
+            {
+                booster.OnBallBust -= BoostPlayer;
+            }
+        }
+        
+        public void Tick()
+        {
+            if (_isPaused)
+                return;
+
+            if (_lastClickPosition.HasValue)
+            {
+                var deltaVector = _lastClickPosition.Value - _inputSystem.PointerPosition;
+                var rawForceDirection = new Vector3(deltaVector.x, 0, deltaVector.y);
+                _characterController.SetForcePosition(rawForceDirection);
+            }
+        }
+
+        private void FinishLevel()
+        {
+            _isPaused = true;
+            var sceneConfig = _playerDataContainer.PlayerRuntimeData.LastLevel;
+            var starCount = sceneConfig.Goals.threeStars >= _hitCount ? 3
+                : sceneConfig.Goals.twoStars >= _hitCount ? 2
+                : sceneConfig.Goals.oneStar >= _hitCount ? 1 : 0;
+            var sceneIndex = _playerDataContainer.PlayerRuntimeData.LastLevelIndex;
+            if (starCount > 0)
+            {
+                if (_playerDataContainer.PlayerProgress.LevelsStars.Count - 1 > sceneIndex)
+                {
+                    var lastStarCount = _playerDataContainer.PlayerProgress.LevelsStars[sceneIndex];
+                    _playerDataContainer.PlayerProgress.LevelsStars[sceneIndex] = Mathf.Max(lastStarCount, starCount);
+                }
+                else
+                {
+                    _playerDataContainer.PlayerProgress.LevelsStars.Add(starCount);
+                }
+                _playerDataContainer.Save();
+            }
+            _levelUiController.ShowEndView(starCount);
+        }
+
+        private void NextLevel()
+        {
+            var levelsCount = _configContainer.LevelsConfigRepository.LevelsConfig.Count;
+            var nextLevelIndex = _playerDataContainer.PlayerRuntimeData.LastLevelIndex + 1;
+            var nextScene = levelsCount > nextLevelIndex
+                ? _configContainer.LevelsConfigRepository.LevelsConfig[nextLevelIndex]
+                : _configContainer.LevelsConfigRepository.MainMenu;
+            _sceneLoadService.LoadScene(nextScene);
         }
 
         private void Restart()
         {
-            
+            _characterController.Restart();
+            ChangeHitCount(0);
+            ChangePauseState(false);
+        }
+
+        private void ChangeHitCount(int newHitCount)
+        {
+            _hitCount = newHitCount;
+            _levelUiController.SetHitCount(_hitCount);
         }
 
         private void Exit()
         {
-            _sceneLoadService.LoadScene()
+            _playerDataContainer.PlayerRuntimeData.LastLevel = null;
+            _playerDataContainer.Save();
+            _sceneLoadService.LoadMainMenu();
         }
 
         private void UiContinuePressed()
@@ -87,19 +176,34 @@ namespace MiniGolf.Core
             }
             else
             {
-                _levelUiController.HidePauseView();
+                _levelUiController.Hide();
             }
         }
 
         private void PlayerClickStarted(Vector2 clickPosition)
         {
+            if (_isPaused)
+                return;
             _lastClickPosition = clickPosition;
         }
 
         private void PlayerClickPerformed()
         {
-            var forceDir = _inputSystem.PointerPosition;
-            Debug.Log(forceDir - _lastClickPosition);
+            if (!_lastClickPosition.HasValue)
+                return;
+            
+            ChangeHitCount(_hitCount+1);
+            
+            var lastPointerPos = _inputSystem.PointerPosition;
+            var deltaVector = _lastClickPosition.Value - lastPointerPos;
+            var rawForceDirection = new Vector3(deltaVector.x, 0, deltaVector.y);
+            _characterController.AddForce(rawForceDirection);
+            _lastClickPosition = null;
+        }
+        
+        private void BoostPlayer(Vector3 force)
+        {
+            _characterController.AddForce(force);
         }
     }
 }

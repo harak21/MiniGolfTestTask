@@ -1,9 +1,6 @@
-﻿using MiniGolf.Core;
-using MiniGolf.PlayerData;
+﻿using MiniGolf.PlayerData;
 using JetBrains.Annotations;
-using MiniGolf.Input;
-using MiniGolf.UI;
-using MiniGolf.UI.MainMenu;
+using MiniGolf.SceneManagement;
 using MiniGolf.Utility.Config;
 using MiniGolf.Utility.Loading;
 using VContainer.Unity;
@@ -16,29 +13,25 @@ namespace MiniGolf.Bootstrap
         private readonly ILoadingService _loadingService;
         private readonly ConfigContainer _configContainer;
         private readonly PlayerDataContainer _playerDataContainer;
-        private readonly MainMenuController _mainMenuController;
-        private readonly GameManager _gameManager;
-        private readonly IInputSystem _inputSystem;
+        private readonly ISceneLoadService _sceneLoadService;
 
         public BootstrapFlow(ILoadingService loadingService, 
             ConfigContainer configContainer, 
             PlayerDataContainer playerDataContainer,
-            MainMenuController mainMenuController,
-            GameManager gameManager)
+            ISceneLoadService sceneLoadService)
         {
             _loadingService = loadingService;
             _configContainer = configContainer;
             _playerDataContainer = playerDataContainer;
-            _mainMenuController = mainMenuController;
-            _gameManager = gameManager;
+            _sceneLoadService = sceneLoadService;
         }
         
         public async void Start()
         {
             await _loadingService.Load(_configContainer);
             await _loadingService.Load(_playerDataContainer);
-            await _loadingService.Load(_mainMenuController);
-            _gameManager.Start();
+
+            await _sceneLoadService.LoadMainMenu();
         }
     }
 }

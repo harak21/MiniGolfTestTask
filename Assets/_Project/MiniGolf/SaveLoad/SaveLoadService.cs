@@ -13,7 +13,10 @@ namespace MiniGolf.SaveLoad
         public void Save(string path, ISaveData data)
         {
             using StreamWriter sw = new StreamWriter(path, false);
-            sw.Write(JsonConvert.SerializeObject(data, Formatting.Indented));
+            sw.Write(JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
             sw.Close();
         }
         

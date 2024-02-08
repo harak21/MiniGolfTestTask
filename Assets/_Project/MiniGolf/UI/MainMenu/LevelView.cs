@@ -27,7 +27,6 @@ namespace MiniGolf.UI.MainMenu
         {
             _levelIndex = levelIndex;
             label.text = levelName;
-            background.color = isLevelAvailable ? availableColor : unavailableColor;
 
             if (!isLevelAvailable)
                 return;
@@ -37,11 +36,13 @@ namespace MiniGolf.UI.MainMenu
                 stars[i].enabled = true;
                 stars[i].color = i < starCount ? starActiveColor : starInactiveColor;
             }
-            
+
+            SetAvailable();
         }
 
-        public void SetAvailable()
+        private void SetAvailable()
         {
+            background.color = availableColor;
             startBtn.interactable = true;
             startBtn.onClick.AddListener(StartLevel);
         }

@@ -6,5 +6,6 @@ namespace MiniGolf.SceneManagement
     public interface ISceneLoadService
     {
         Task LoadScene(LevelConfig levelConfig);
+        Task LoadMainMenu();
     }
 }

@@ -8,7 +8,10 @@ namespace MiniGolf.Utility.Config
     public class LevelsConfigRepository : ScriptableObject
     {
         [SerializeField] private List<LevelConfig> levelsConfig = new();
+        [SerializeField] private LevelConfig mainMenu;
 
         public ReadOnlyCollection<LevelConfig> LevelsConfig => levelsConfig.AsReadOnly();
+
+        public LevelConfig MainMenu => mainMenu;
     }
 }

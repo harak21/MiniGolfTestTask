@@ -14,6 +14,7 @@ namespace MiniGolf.Core.Player
         private readonly PlayerConfig _playerConfig;
         private Rigidbody _playerRb;
         private GameObject _player;
+        private Vector3 _zeroVector = Vector3.zero;
 
         public PlayerCharacterController(IPlayerSpawner playerSpawner, 
             ConfigContainer configContainer,
@@ -55,6 +56,11 @@ namespace MiniGolf.Core.Player
         {
             _playerSpawner.Release(_player);
             Load();
+        }
+
+        public void ResetArrow()
+        {
+            _playerArrow.SetLinePosition(_zeroVector, _zeroVector);
         }
     }
 }

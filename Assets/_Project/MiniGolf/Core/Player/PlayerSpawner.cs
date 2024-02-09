@@ -13,9 +13,9 @@ namespace MiniGolf.Core.Player
         private readonly LevelConfig _levelConfig;
         private GameObject _playerPrefab;
 
-        public PlayerSpawner(PlayerDataContainer playerDataContainer)
+        public PlayerSpawner(PlayerDataContainer playerDataContainer, ConfigContainer configContainer)
         {
-            _levelConfig = playerDataContainer.PlayerRuntimeData.LastLevel;
+            _levelConfig = configContainer.LevelsConfigRepository[playerDataContainer.PlayerRuntimeData.LastLevelID];
         }
         
         public async Task Load()

@@ -6,6 +6,6 @@ namespace MiniGolf.PlayerData
 {
     public class PlayerProgress : ISaveData
     {
-        [JsonProperty] public List<int> LevelsStars { get; set; } = new();
+        [JsonProperty] public Dictionary<int, int> LevelsStars { get; set; } = new();
     }
 }

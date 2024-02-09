@@ -14,7 +14,7 @@ namespace MiniGolf.UI.MainMenu
     [UsedImplicitly]
     public class MainMenuUiController : ILoadUnit
     {
-        public event Action<LevelConfig> OnLevelSelected;
+        public event Action<int> OnLevelSelected;
         
         private readonly ConfigContainer _configContainer;
         private readonly PlayerDataContainer _playerDataContainer;
@@ -88,19 +88,29 @@ namespace MiniGolf.UI.MainMenu
         private void StartSelectedLevel(int levelIndex)
         {
             var levelConfig = _configContainer.LevelsConfigRepository.LevelsConfig[levelIndex];
-            OnLevelSelected?.Invoke(levelConfig);
+            OnLevelSelected?.Invoke(levelConfig.ID);
         }
 
         private void StartLastAvailableLevel()
         {
-            var lastOpenedLevel = _playerDataContainer.PlayerProgress.LevelsStars.Count;
-            LevelConfig lastLevel = _configContainer.LevelsConfigRepository.LevelsConfig[lastOpenedLevel];
-            if (_playerDataContainer.PlayerRuntimeData.LastLevel != null)
+            var lastLevelID = _playerDataContainer.PlayerRuntimeData.LastLevelID;
+            LevelConfig lastLevel;
+            if (lastLevelID == -1)
             {
-                lastLevel = _playerDataContainer.PlayerRuntimeData.LastLevel;
+                var lastOpenedLevel = _playerDataContainer.PlayerProgress.LevelsStars.Count;
+                if (lastOpenedLevel >= _configContainer.LevelsConfigRepository.LevelsConfig.Count)
+                {
+                    lastOpenedLevel = _configContainer.LevelsConfigRepository.LevelsConfig.Count - 1;
+                }
+
+                lastLevel = _configContainer.LevelsConfigRepository.LevelsConfig[lastOpenedLevel];
+            }
+            else
+            {
+                lastLevel = _configContainer.LevelsConfigRepository[lastLevelID];
             }
 
-            OnLevelSelected?.Invoke(lastLevel);
+            OnLevelSelected?.Invoke(lastLevel.ID);
         }
     }
 }

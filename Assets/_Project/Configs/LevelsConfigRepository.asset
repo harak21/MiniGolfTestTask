@@ -13,28 +13,32 @@ MonoBehaviour:
   m_Name: LevelsConfigRepository
   m_EditorClassIdentifier: 
   levelsConfig:
-  - levelName: Level 1
+  - id: 0
+    levelName: Level 1
     addressableName: 1.First
     startPoint: {x: -2.87, y: 0.839, z: -2.66}
     levelGoals:
       threeStars: 2
       twoStars: 5
       oneStar: 8
-  - levelName: Level 2
+  - id: 1
+    levelName: Level 2
     addressableName: 2.Second
-    startPoint: {x: 0, y: 0, z: 0}
+    startPoint: {x: -2.87, y: 0.84, z: -2.66}
     levelGoals:
       threeStars: 2
       twoStars: 5
       oneStar: 8
-  - levelName: Level 3
+  - id: 2
+    levelName: Level 3
     addressableName: 3.Third
-    startPoint: {x: 0, y: 0, z: 0}
+    startPoint: {x: 3, y: 0.84, z: -0.7}
     levelGoals:
       threeStars: 2
       twoStars: 5
       oneStar: 8
   mainMenu:
+    id: -1
     levelName: Main
     addressableName: 00.GameMenu
     startPoint: {x: 0, y: 0, z: 0}

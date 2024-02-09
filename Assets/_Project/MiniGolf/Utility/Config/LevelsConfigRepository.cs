@@ -11,7 +11,8 @@ namespace MiniGolf.Utility.Config
         [SerializeField] private LevelConfig mainMenu;
 
         public ReadOnlyCollection<LevelConfig> LevelsConfig => levelsConfig.AsReadOnly();
-
         public LevelConfig MainMenu => mainMenu;
+
+        public LevelConfig this[int id] => levelsConfig.Find(c => c.ID == id);
     }
 }

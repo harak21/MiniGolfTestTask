@@ -9,6 +9,7 @@ namespace MiniGolf.Utility.Config
     [Serializable]
     public class LevelConfig : ILoadUnit
     {
+        [SerializeField] private int id;
         [SerializeField] private string levelName;
         [SerializeField] private string addressableName;
         [SerializeField] private Vector3 startPoint;
@@ -17,7 +18,9 @@ namespace MiniGolf.Utility.Config
         public Vector3 StartPoint => startPoint;
         public LevelGoals Goals => levelGoals;
         public string LevelName => levelName;
-        
+
+        public int ID => id;
+
         public async Task Load()
         {
             await Addressables.LoadSceneAsync(addressableName).Task;

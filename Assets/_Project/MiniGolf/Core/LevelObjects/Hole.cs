@@ -12,8 +12,17 @@ namespace MiniGolf.Core.LevelObjects
         {
             if (!other.CompareTag("Player"))
                 return;
-            
+
+            other.gameObject.layer = LayerMask.NameToLayer("PlayerInHole");
             OnLevelFinish?.Invoke();
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (!other.CompareTag("Player"))
+                return;
+            
+            other.gameObject.layer = LayerMask.NameToLayer("Default");
         }
     }
 }

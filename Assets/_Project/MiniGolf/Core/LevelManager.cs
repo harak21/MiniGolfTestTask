@@ -64,8 +64,15 @@ namespace MiniGolf.Core
             }
 
             _isPaused = false;
+            
+            Application.quitting += ApplicationOnQuitting;
         }
-        
+
+        private void ApplicationOnQuitting()
+        {
+            _playerDataContainer.Save();
+        }
+
         public void Dispose()
         {
             _inputSystem.OnClickStarted -= PlayerClickStarted;
@@ -101,21 +108,19 @@ namespace MiniGolf.Core
         private void FinishLevel()
         {
             _isPaused = true;
-            var sceneConfig = _playerDataContainer.PlayerRuntimeData.LastLevel;
+            var sceneConfig = _configContainer.LevelsConfigRepository[_playerDataContainer.PlayerRuntimeData.LastLevelID];
             var starCount = sceneConfig.Goals.threeStars >= _hitCount ? 3
                 : sceneConfig.Goals.twoStars >= _hitCount ? 2
                 : sceneConfig.Goals.oneStar >= _hitCount ? 1 : 0;
-            var sceneIndex = _playerDataContainer.PlayerRuntimeData.LastLevelIndex;
             if (starCount > 0)
             {
-                if (_playerDataContainer.PlayerProgress.LevelsStars.Count - 1 > sceneIndex)
+                if (_playerDataContainer.PlayerProgress.LevelsStars.TryGetValue(sceneConfig.ID, out var oldStart))
                 {
-                    var lastStarCount = _playerDataContainer.PlayerProgress.LevelsStars[sceneIndex];
-                    _playerDataContainer.PlayerProgress.LevelsStars[sceneIndex] = Mathf.Max(lastStarCount, starCount);
+                    _playerDataContainer.PlayerProgress.LevelsStars[sceneConfig.ID] = Mathf.Max(oldStart, starCount);
                 }
                 else
                 {
-                    _playerDataContainer.PlayerProgress.LevelsStars.Add(starCount);
+                    _playerDataContainer.PlayerProgress.LevelsStars.Add(sceneConfig.ID, starCount);
                 }
                 _playerDataContainer.Save();
             }
@@ -126,9 +131,13 @@ namespace MiniGolf.Core
         {
             var levelsCount = _configContainer.LevelsConfigRepository.LevelsConfig.Count;
             var nextLevelIndex = _playerDataContainer.PlayerRuntimeData.LastLevelIndex + 1;
-            var nextScene = levelsCount > nextLevelIndex
-                ? _configContainer.LevelsConfigRepository.LevelsConfig[nextLevelIndex]
-                : _configContainer.LevelsConfigRepository.MainMenu;
+            var nextScene = _configContainer.LevelsConfigRepository.MainMenu;
+            if (levelsCount > nextLevelIndex)
+            {
+                nextScene = _configContainer.LevelsConfigRepository.LevelsConfig[nextLevelIndex];
+                _playerDataContainer.PlayerRuntimeData.LastLevelID = nextScene.ID;
+                _playerDataContainer.PlayerRuntimeData.LastLevelIndex = nextLevelIndex;
+            }
             _sceneLoadService.LoadScene(nextScene);
         }
 
@@ -147,7 +156,7 @@ namespace MiniGolf.Core
 
         private void Exit()
         {
-            _playerDataContainer.PlayerRuntimeData.LastLevel = null;
+            //_playerDataContainer.PlayerRuntimeData.LastLevel = null;
             _playerDataContainer.Save();
             _sceneLoadService.LoadMainMenu();
         }
@@ -199,6 +208,7 @@ namespace MiniGolf.Core
             var rawForceDirection = new Vector3(deltaVector.x, 0, deltaVector.y);
             _characterController.AddForce(rawForceDirection);
             _lastClickPosition = null;
+            _characterController.ResetArrow();
         }
         
         private void BoostPlayer(Vector3 force)

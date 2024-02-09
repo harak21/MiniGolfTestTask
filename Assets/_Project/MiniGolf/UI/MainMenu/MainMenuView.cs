@@ -10,7 +10,7 @@ namespace MiniGolf.UI.MainMenu
         
         [SerializeField] private Button continueBtn;
         [SerializeField] private ScrollRect levelsViewHandler;
-        [SerializeField] private GameObject loadingCurtain;
+        [SerializeField] private GameObject loadingCurtain; 
 
         public RectTransform LevelsViewHandler => levelsViewHandler.content;
 
